@@ -1,0 +1,171 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+	<section class="p-0 d-flex align-items-center position-relative overflow-hidden">
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- left -->
+				<div
+					class="col-12 col-lg-6 d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 vh-lg-100">
+					<div class="p-3 p-lg-5">
+						<!-- Title -->
+						<div class="text-center">
+							<h2 class="fw-bold fs-3">به بزرگترین انجمن آموزش زبان خوش آمدید</h2>
+							<p class="mb-0 h6 fw-light">بیایید امروز چیز جدیدی یاد بگیریم!</p>
+						</div>
+						<!-- SVG Image -->
+						<img src="{% static 'images/element/02.svg' %}" class="mt-5" alt="">
+						<!-- Info -->
+						<div class="d-sm-flex mt-5 align-items-center justify-content-center">
+							<ul class="avatar-group mb-2 mb-sm-0">
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle"
+										src="{% static 'images/avatar/01.jpg' %}" alt="avatar"></li>
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle"
+										src="{% static 'images/avatar/02.jpg' %}" alt="avatar"></li>
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle"
+										src="{% static 'images/avatar/03.jpg' %}" alt="avatar"></li>
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle"
+										src="{% static 'images/avatar/04.jpg' %}" alt="avatar"></li>
+							</ul>
+							<!-- Content -->
+							<p class="mb-0 h6 fw-light ms-0 ms-sm-3"> بیش از 100 دانشجو به ما پیوستند، حالا نوبت شماست.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Right -->
+				<div class="col-12 col-lg-6 m-auto">
+					<div class="row my-5">
+						<div class="col-sm-10 col-xl-8 m-auto">
+							<!-- Title -->
+							<img src="{% static 'images/element/03.svg' %}" class="h-40px mb-2" alt="">
+							<h2 class="">ثبت نام</h2>
+							<p class="mb-4">از دیدن شما خوشحالم! لطفا با حساب کاربری خود ثبت نام کنید.</p>
+							{% if error %}
+							<div class="alert alert-danger">
+								{{ error }}
+							</div>
+						{% endif %}
+							<!-- Form START -->
+							<form method="POST" action="{% url 'accounts:signup' %}" class="row">
+								{% csrf_token %}
+							
+								<!-- Email -->
+								<div class="mb-4">
+									<label class="form-label">ایمیل</label>
+									<div class="input-group input-group-lg">
+										<span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+											<i class="bi bi-envelope-fill"></i>
+										</span>
+										<input type="email" class="form-control border-0 bg-light rounded-end ps-1" name="email" placeholder="***@gmail.com" value="{{ data.email|default:'' }}">
+									</div>
+								</div>
+								<!-- First Name -->
+								<div class="mb-4">
+									<label class="form-label">نام</label>
+									<div class="input-group input-group-lg">
+										<span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+											<i class="bi bi-person"></i>
+										</span>
+										<input type="text" class="form-control border-0 bg-light rounded-end ps-1" name="first_name" placeholder="نام" value="{{ data.first_name|default:'' }}">
+									</div>
+								</div>
+
+								<!-- Last Name -->
+								<div class="mb-4">
+									<label class="form-label">نام خانوادگی</label>
+									<div class="input-group input-group-lg">
+										<span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+											<i class="bi bi-person"></i>
+										</span>
+										<input type="text" class="form-control border-0 bg-light rounded-end ps-1" name="last_name" placeholder="نام خانوادگی" value="{{ data.last_name|default:'' }}">
+									</div>
+								</div>
+								<!-- Phone -->
+								<div class="mb-4">
+									<label class="form-label">شماره تلفن</label>
+									<div class="input-group input-group-lg">
+										<span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+											<i class="bi bi-phone"></i>
+										</span>
+										<input type="text" class="form-control border-0 bg-light rounded-end ps-1" name="phone" placeholder="09" value="{{ data.phone|default:'' }}">
+									</div>
+								</div>
+							
+								<!-- Age -->
+								<label class="form-label">سن</label>
+								<div class="input-group input-group-lg">
+									<span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+										<i class="bi bi-calendar"></i>
+									</span>
+									<input type="number" class="form-control border-0 bg-light rounded-end ps-1" name="age" placeholder="سن" value="{{ data.age|default:'' }}">
+								</div>
+							
+								<!-- Password -->
+								<div class="mb-4">
+									<label class="form-label">رمز عبور *</label>
+									<div class="input-group input-group-lg">
+										<span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+											<i class="fas fa-lock"></i>
+										</span>
+										<input type="password" class="form-control border-0 bg-light rounded-end ps-1" name="password" placeholder="*********">
+									</div>
+								</div>
+							
+								<!-- Confirm Password -->
+								<div class="mb-4">
+									<label class="form-label">تایید رمز عبور *</label>
+									<div class="input-group input-group-lg">
+										<span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+											<i class="fas fa-lock"></i>
+										</span>
+										<input type="password" class="form-control border-0 bg-light rounded-end ps-1" name="confirm_password" placeholder="*********">
+									</div>
+								</div>
+							
+								<!-- Check box -->
+								<!-- <div class="mb-4">
+									<div class="form-check">
+										<input type="checkbox" class="form-check-input" id="checkbox-1">
+										<label class="form-check-label" for="checkbox-1">
+											با ثبت نام <a href="#">شرایط و قوانین سایت</a> را خواهید پذیرفت.
+										</label>
+									</div>
+								</div> -->
+							
+								<!-- Button -->
+								<div class="align-items-center mt-0">
+									<div class="d-grid">
+										<button class="btn btn-primary mb-0" type="submit">ثبت نام</button>
+									</div>
+								</div>
+
+							
+							</form>
+							
+
+						</div>
+
+						<!-- Form END -->
+
+
+
+						<!-- Sign up link -->
+						<div class="mt-4 text-center">
+							<span>آیا قبلا ثبت نام کرده اید؟<a href="{% url 'accounts:login' %}"> ورود</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</section>
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+{% endblock %}

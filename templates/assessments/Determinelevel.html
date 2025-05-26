@@ -1,0 +1,223 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block content %}
+{% include 'include/header.html' %}
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+
+    <!-- =======================
+Page content START -->
+    <section class="pt-5 pb-0">
+        <div class="container">
+            <div class="row g-0 g-lg-5">
+
+                <!-- Left sidebar START -->
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-12">
+                            <!-- Instructor image START -->
+                            <div class="card shadow p-2 mb-4 text-center">
+                                <div class="rounded-3">
+                                    <!-- Image -->
+                                    <img src="{% static 'images/instructor/07.jpg' %}" class="card-img"
+                                        alt="course image">
+                                </div>
+
+                                <!-- Card body -->
+                                <div class="card-body px-3">
+                                    <!-- Rating -->
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item ms-2 h6 fw-light mb-0">انتخاب معلم</li>
+                                    </ul>
+                                    <!-- Social media button -->
+                                    <div class="avatar">
+                                        <img class="avatar-img rounded-circle" src="{% static 'assets/images/avatar/01.jpg' %}"
+                                            alt="avatar">
+                                    </div>
+                                    <div class="avatar">
+                                        <img class="avatar-img rounded-circle" src="{% static 'assets/images/avatar/02.jpg' %}"
+                                            alt="avatar">
+                                    </div>
+                                    <div class="avatar">
+                                        <img class="avatar-img rounded-circle" src="{% static 'assets/images/avatar/03.jpg' %}"
+                                            alt="avatar">
+                                    </div>
+                                    <div class="avatar">
+                                        <img class="avatar-img rounded-circle" src="{% static 'assets/images/avatar/09.jpg' %}"
+                                            alt="avatar">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Instructor image END -->
+                        </div>
+
+
+                    </div> <!-- Row End -->
+                </div>
+                <!-- Left sidebar END -->
+
+                <!-- Main content START -->
+                <script>
+                    const csrftoken = "{{ csrf_token }}";
+                </script>
+
+                <div class="col-lg-8">
+                    <div class="dialog-container">
+                        <h1 class="dialog-title">مکالمه با معلم هوش مصنوعی</h1>
+                        <div id="dialogQuestion" class="dialog-question">بزن بریم شروع کنیم</div>
+
+                        <button id="startDialogButton">شروع مکالمه</button>
+                        <button id="stopRecordingButton" disabled>توقف ضبط</button>
+                        <button id="submitAnswerButton" disabled>ارسال پاسخ</button>
+
+                        <!-- <h2 id="dialogQuestion">سوال شما اینجا...</h2> -->
+                        <p id="dialogProgressText">...</p>
+                        <audio id="audioPreview" controls></audio>
+
+                        <!-- <button id="sendAnswer" class="dialog-button" disabled>ارسال پاسخ</button> -->
+                        <div id="audioPlayback"></div>
+                        <div class="dialog-progress-container">
+                            <progress id="dialogProgressBar" value="0" max="100"></progress>
+                            <span id="dialogProgressText">سوال 1 از 4</span>
+                        </div>
+                        <div id="dialogResponses" class="dialog-responses"></div>
+                        <audio id="audioPlayer" controls style="display: none;"></audio>
+                    </div>
+                </div>
+                <!-- Main content END -->
+
+            </div><!-- Row END -->
+        </div>
+    </section>
+    <!-- =======================
+Page content END -->
+
+
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+{% include 'include/footer.html' %}
+<script>
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let mediaRecorder;
+    let audioChunks = [];
+    let audioBlob;
+
+    // دریافت سوالات از سرور
+    async function fetchQuestions() {
+        const response = await fetch('http://127.0.0.1:8000/assessments/get-questions/');
+        const data = await response.json();
+        questions = data.questions;
+        displayQuestion();
+    }
+
+    // نمایش سوال
+    function displayQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('dialogQuestion').innerText = currentQuestion.text;
+            document.getElementById('dialogProgressText').innerText = `سوال ${currentQuestionIndex + 1} از ${questions.length}`;
+        } else {
+            document.getElementById('dialogQuestion').innerText = 'تعیین سطح به پایان رسید!';
+            document.getElementById('startDialogButton').disabled = true;
+        }
+    }
+
+    // شروع مکالمه و ضبط
+    document.getElementById('startDialogButton').addEventListener('click', async () => {
+        await fetchQuestions(); 
+        startRecording(); 
+        toggleButtons(true); 
+    });
+
+    // توقف ضبط
+    document.getElementById('stopRecordingButton').addEventListener('click', () => {
+        stopRecording(); 
+        toggleButtons(false); 
+    });
+
+    // ارسال پاسخ به سرور و رفتن به سوال بعدی
+    document.getElementById('submitAnswerButton').addEventListener('click', async () => {
+        await sendAudioToServer(); 
+        goToNextQuestion(); 
+    });
+
+    // شروع ضبط صدا
+    function startRecording() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    document.getElementById('audioPreview').src = audioUrl;
+                };
+
+                mediaRecorder.start();
+            });
+    }
+
+    // ارسال صدا به سرور
+    async function sendAudioToServer() {
+        if (!questions[currentQuestionIndex]) {
+            console.error('سوال یافت نشد!');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('audio', audioBlob);
+        formData.append('question_id', questions[currentQuestionIndex].id);
+
+        const response = await fetch('http://127.0.0.1:8000/assessments/upload-audio/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+        console.log(result);
+    }
+
+    // توقف ضبط
+    function stopRecording() {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+        }
+    }
+
+    // رفتن به سوال بعدی
+    function goToNextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            setTimeout(() => {
+                displayQuestion();
+                startRecording();
+                toggleButtons(true);
+                document.getElementById('audioPreview').src = '';
+            }, 1000);
+        } else {
+            alert('همه سوال‌ها تموم شد!');
+        }
+    }
+
+    // مدیریت دکمه‌ها
+    function toggleButtons(isRecording) {
+        document.getElementById('startDialogButton').style.display = isRecording ? 'none' : 'block';
+        document.getElementById('stopRecordingButton').disabled = !isRecording;
+        document.getElementById('submitAnswerButton').disabled = isRecording;
+    }
+</script>
+
+
+{% endblock %}
