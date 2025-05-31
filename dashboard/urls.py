@@ -13,7 +13,7 @@ urlpatterns = [
     path('student-edit-profile/', Student_Edit_Profile.as_view(), name='student-edit-profile'),
     path('student-quiz/', Student_Quiz.as_view(), name='student-quiz'),
     path('student-subscription/', Student_Subscription.as_view(), name='student-subscription'),
-    path('dashboard-lesson/', Dashboard_Lesson.as_view(), name='dashboard-lesson'),
+    path('dashboard-lesson/<int:pk>/', Dashboard_Lesson.as_view(), name='dashboard-lesson'),
     path('lesson',Lesson.as_view(), name='lesson')
     
 ]

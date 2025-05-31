@@ -416,13 +416,23 @@ Page Banner START -->
 						<div class="col-auto">
 							<div class="avatar avatar-xxl position-relative mt-n3">
 								<img class="avatar-img rounded-circle border border-white border-3 shadow" src="{% static 'assets/images/avatar/09.jpg' %}" alt="">
-								<span class="badge text-bg-success rounded-pill position-absolute top-50 start-100 translate-middle mt-4 mt-md-5 ms-n3 px-md-3">حرفه ای</span>
+								{% if request.user.level == "beginner" %}
+                  <span class="badge text-bg-success rounded-pill position-absolute top-50 start-100 translate-middle mt-4 mt-md-5 ms-n3 px-md-3">مبتدی</span>
+                {% elif request.user.level == "intermediate" %}
+                  <span class="badge text-bg-success rounded-pill position-absolute top-50 start-100 translate-middle mt-4 mt-md-5 ms-n3 px-md-3">متوسط</span>
+                {% elif request.user.level == "advanced" %}
+                  <span class="badge text-bg-success rounded-pill position-absolute top-50 start-100 translate-middle mt-4 mt-md-5 ms-n3 px-md-3">پیشرفته</span>
+                {% else %}
+                  <span class="badge text-bg-secondary rounded-pill position-absolute top-50 start-100 translate-middle mt-4 mt-md-5 ms-n3 px-md-3">نامشخص</span>
+                {% endif %}
+                
 							</div>
 						</div>
 						<!-- Profile info -->
 						<div class="col d-sm-flex justify-content-between align-items-center">
 							<div>
 								<h1 class="my-1 fs-4">{{ request.user.email }}</h1>
+                <h2 class="my-1 fs-4">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
 								<ul class="list-inline mb-0">
 									<li class="list-inline-item me-3 mb-1 mb-sm-0">
 										<span class="h6">255</span>
@@ -480,14 +490,14 @@ Page content START -->
 							<!-- Dashboard menu -->
 							<div class="list-group list-group-dark list-group-borderless collapse-list">
 								<a class="list-group-item active" href="{% url 'dashboard:student-dashboard'%}"><i class="bi bi-ui-checks-grid fa-fw me-2"></i>داشبورد</a>
-								<a class="list-group-item" href="{% url 'dashboard:student-course-list' %}"><i class="bi bi-basket fa-fw me-2"></i>دوره های پیشنهادی</a>
+								{% comment %} <a class="list-group-item" href="{% url 'dashboard:student-course-list' %}"><i class="bi bi-basket fa-fw me-2"></i>دوره های پیشنهادی</a> {% endcomment %}
 								<a class="list-group-item" href="{% url 'dashboard:student-course-resume'%}"><i class="far fa-fw fa-file-alt me-2"></i>کلاس درس</a>
-								<a class="list-group-item" href="{% url 'dashboard:student-quiz'%}"><i class="bi bi-question-diamond fa-fw me-2"></i>امتحانات</a>
+								{% comment %} <a class="list-group-item" href="{% url 'dashboard:student-quiz'%}"><i class="bi bi-question-diamond fa-fw me-2"></i>امتحانات</a> {% endcomment %}
 								<!-- <a class="list-group-item" href="student-payment-info.html"><i class="bi bi-credit-card-2-front fa-fw me-2"></i>اطلاعات کارت</a> -->
-								<a class="list-group-item" href="{% url 'dashboard:student-bookmark'%}"><i class="bi bi-cart-check fa-fw me-2"></i>موردعلاقه ها</a>
+								{% comment %} <a class="list-group-item" href="{% url 'dashboard:student-bookmark'%}"><i class="bi bi-cart-check fa-fw me-2"></i>موردعلاقه ها</a> {% endcomment %}
 								<a class="list-group-item" href="{% url 'dashboard:student-edit-profile'%}"><i class="bi bi-pencil-square fa-fw me-2"></i>ویرایش پروفایل</a>
 								<!-- <a class="list-group-item" href="instructor-setting.html"><i class="bi bi-gear fa-fw me-2"></i>تنظیمات</a> -->
-								<a class="list-group-item" href="{% url 'dashboard:student-course-delete-account'%}"><i class="bi bi-trash fa-fw me-2"></i>حذف پروفایل</a>
+								{% comment %} <a class="list-group-item" href="{% url 'dashboard:student-course-delete-account'%}"><i class="bi bi-trash fa-fw me-2"></i>حذف پروفایل</a> {% endcomment %}
 								<a class="list-group-item text-danger bg-danger-soft-hover" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt fa-fw me-2"></i>خروج</a>
 								<!-- Collapse menu -->
 								<!-- <a class="list-group-item" data-bs-toggle="collapse" href="#collapseauthentication" role="button" aria-expanded="false" aria-controls="collapseauthentication">
@@ -517,9 +527,9 @@ Page content START -->
 					<!-- Card body START -->
 					<div class="card-body">
 						<!-- Form -->
-						<form class="row g-4">
-
-							<!-- Profile picture -->
+						<form class="row g-4" method="post">
+              {% csrf_token %}
+							{% comment %} <!-- Profile picture -->
 							<div class="col-12 justify-content-center align-items-center">
 								<label class="form-label">تصویر</label>
 								<div class="d-flex align-items-center">
@@ -535,62 +545,62 @@ Page content START -->
 									<label class="btn btn-primary-soft mb-0" for="uploadfile-1">تغییر</label>
 									<input id="uploadfile-1" class="form-control d-none" type="file">
 								</div>
-							</div>
+							</div> {% endcomment %}
 
 							<!-- Full name -->
 							<div class="col-12">
 								<label class="form-label">نام</label>
 								<div class="input-group">
-									<input type="text" class="form-control" value="علی" placeholder="نام">
-									<input type="text" class="form-control" value="محمدی" placeholder="نام خانوادگی">
+									<input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" placeholder="نام">
+									<input type="text" name="last_name" class="form-control" value="{{ user.last_name }}" placeholder="نام خانوادگی">
 								</div>
 							</div>
 
-							<!-- Username -->
+							{% comment %} <!-- Username -->
 							<div class="col-md-6">
 								<label class="form-label">نام کاربری</label>
 								<div class="input-group">
 									<span class="input-group-text">rtl-theme.com</span>
 									<input type="text" class="form-control" value="rtltheme">
 								</div>
-							</div>
+							</div> {% endcomment %}
 
 							<!-- Email id -->
 							<div class="col-md-6">
 								<label class="form-label">ایمیل</label>
-								<input class="form-control" type="email" value="example@gmail.com" placeholder="ایمیل">
+								<input class="form-control" type="email" name="email" value="{{ user.email }}" placeholder="ایمیل">
 							</div>
 
 							<!-- Phone number -->
 							<div class="col-md-6">
 								<label class="form-label">شماره تماس</label>
-								<input type="text" class="form-control" value="1234567890" placeholder="شماره تماس">
+								<input type="text" name="phone" class="form-control" value="{{ user.phone }}" placeholder="شماره تماس">
 							</div>
 
-							<!-- Location -->
+							{% comment %} <!-- Location -->
 							<div class="col-md-6">
 								<label class="form-label">آدرس</label>
 								<input class="form-control" type="text" value="تهران">
-							</div>
+							</div> {% endcomment %}
 							
-							<!-- About me -->
+							{% comment %} <!-- About me -->
 							<div class="col-12">
 								<label class="form-label">درباره من</label>
 								<textarea class="form-control" rows="3">من راهی برای دریافت پول برای سرگرمی مورد علاقه‌ام پیدا کرده‌ام و این کار را در حالی انجام می‌دهم که رویای سفر به دور دنیا را دنبال می‌کنم.</textarea>
 								<div class="form-text">توضیحات مختصری برای پروفایل شما</div> 
-							</div>
-
+							</div> {% endcomment %}
+              
 							<!-- Education -->
-							<div class="col-12">
+							{% comment %} <div class="col-12">
 								<label class="form-label">تحصیلات</label>
-								<input class="form-control mb-2" type="text" value="لیسانس گرافیک کامپیوتری">
-								<input class="form-control mb-2" type="text" value="کارشناسی ارشد گرافیک کامپیوتری">
-								<button class="btn btn-sm btn-light mb-0"><i class="bi bi-plus me-1"></i>افزودن</button>
+								<input class="form-control mb-2" type="text" value="لیسانس گرافیک کامپیوتری"> {% endcomment %}
+								{% comment %} <input class="form-control mb-2" type="text" value="کارشناسی ارشد گرافیک کامپیوتری">
+								<button class="btn btn-sm btn-light mb-0"><i class="bi bi-plus me-1"></i>افزودن</button> {% endcomment %}
 							</div>
 
 							<!-- Save button -->
 							<div class="d-sm-flex justify-content-end">
-								<button type="button" class="btn btn-primary mb-0">ذخیره</button>
+								<button type="submit" class="btn btn-primary mb-0">ذخیره</button>
 							</div>
 						</form>
 					</div>
@@ -612,34 +622,7 @@ Page content END -->
 
 <!-- =======================
 Footer START -->
-<footer class="bg-dark p-3">
-	<div class="container">
-		<div class="row align-items-center">
-			<!-- Widget -->
-			<div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
-				<!-- Logo START -->
-				<a href="index.html"> <img class="h-20px" src="{% static 'assets/images/logo-light.svg' %}" alt="logo"> </a>
-			</div>
-			
-			<!-- Widget -->
-			<div class="col-md-4 mb-3 mb-md-0">
-				<div class="text-center text-white">
-					ارائه شده در سایت <a href="https://www.rtl-theme.com/" target="_blank" class="text-reset btn-link">راست چین</a>
-				</div>
-			</div>
-			<!-- Widget -->
-			<div class="col-md-4">
-				<!-- Rating -->
-				<ul class="list-inline mb-0 text-center text-md-end">
-					<li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-facebook"></i></a></li>
-					<li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-instagram"></i></a></li>
-					<li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-linkedin-in"></i></a></li>
-					<li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-twitter"></i></a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</footer>
+{% include 'include/footer.html' %}
 <!-- =======================
 Footer END -->
 

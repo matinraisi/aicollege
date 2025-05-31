@@ -44,7 +44,7 @@ class SignUpView(View):
         if password != confirm_password:
             return render(request, self.template_name, {'error': 'رمز عبور و تایید رمز یکسان نیست!'})
 
-        if len(password) < 8:
+        if len(password) < 4:
             return render(request, self.template_name, {'error': 'رمز عبور باید حداقل 8 کاراکتر باشد!'})
 
         # ثبت نام کاربر
@@ -57,7 +57,10 @@ class SignUpView(View):
                 age=age,
                 password=make_password(password)
             )
-            return redirect('accounts:login')
+            user = authenticate(request, email=email, password=password)
+            if user:
+                login(request, user)
+            return redirect('core:home')
         except Exception as e:
             return render(request, self.template_name, {'error': f'خطا در ثبت نام: {str(e)}'})
 

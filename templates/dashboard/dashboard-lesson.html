@@ -1,5 +1,5 @@
 {% extends '_base.html' %} {% load static %} {% block content %}
-
+{% load jalali_tags %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
   <!-- Mirrored from fixdevelopdemo.ir/theme/eduport/rtl/admin-instructor-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 09 Mar 2025 07:40:47 GMT -->
@@ -649,9 +649,10 @@
                     <div class="col-xxl-6 w-100">
                       <div class="card bg-transparent border rounded-3 h-100">
                         <!-- Catd header -->
+                        {% for season in seasons %}
                         <div class="card-header bg-light border-bottom">
                           <h5 class="card-header-title">
-                            آموزش رایگان Blazor WebAssembly
+                           {{ course.title }}
                           </h5>
                         </div>
 
@@ -671,17 +672,13 @@
                             <div class="col-md-8">
                               <!-- Info -->
                               <p class="mb-3">
-                                می توان امید داشت که تمام و دشواری موجود در
-                                ارائه راهکارها و شرایط سخت تایپ به پایان رسد
-                                وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و
-                                جوابگوی سوالات پیوسته اهل دنیای موجود طراحی
-                                اساسا مورد استفاده قرار گیرد.
+                                {{ course.description }}
                               </p>
 
                               <!-- Price -->
-                              <h5 class="mb-3">70,000 تومان</h5>
+                              <h5 class="mb-3">{{ course.price }}تومان</h5>
 
-                              <!-- Avatar -->
+                              {% comment %} <!-- Avatar -->
                               <div class="d-sm-flex align-items-center">
                                 <!-- Avatar image -->
                                 <div class="avatar avatar-md">
@@ -697,7 +694,7 @@
                                   </h6>
                                   <p class="mb-0 small">مدرس آکادمی صدف</p>
                                 </div>
-                              </div>
+                              </div> {% endcomment %}
                             </div>
                           </div>
                           <!-- Course image and info END -->
@@ -709,22 +706,22 @@
                               <ul class="list-group list-group-borderless">
                                 <li class="list-group-item">
                                   <span>تاریخ انتشار:</span>
-                                  <span class="mb-0">29 دی 1400</span>
+                                  <span class="mb-0">{{ course.updated_at|to_jalali:"%Y/%m/%d" }}</span>
                                 </li>
 
                                 <li class="list-group-item">
                                   <span>مدت زمان دوره:</span>
-                                  <span class="mb-0">13:37:00</span>
+                                  <span class="mb-0">{{ course.time_duration }}</span>
                                 </li>
 
-                                <li class="list-group-item">
+                                {% comment %} <li class="list-group-item">
                                   <span>شرکت کنندگان:</span>
                                   <span class="mb-0">872</span>
-                                </li>
+                                </li> {% endcomment %}
 
                                 <li class="list-group-item">
                                   <span>مجوز:</span>
-                                  <span class="mb-0">دارد</span>
+                                  <span class="mb-0">{{ course.get_certificate_status_display }}</span>
                                 </li>
                               </ul>
                             </div>
@@ -734,32 +731,33 @@
                               <ul class="list-group list-group-borderless">
                                 <li class="list-group-item">
                                   <span>سطح دوره:</span>
-                                  <span class="mb-0">متوسطه</span>
+                                  <span class="mb-0">{{ course.get_level_display }}</span>
                                 </li>
 
                                 <li class="list-group-item">
                                   <span>تعداد ویدیو:</span>
-                                  <span class="mb-0">30</span>
+                                  <span class="mb-0">{{ course.lesson_count }}</span>
                                 </li>
 
                                 <li class="list-group-item">
                                   <span>زبان:</span>
-                                  <span class="mb-0">فارسی</span>
+                                  <span class="mb-0">{{ course.get_language_display }}</span>
                                 </li>
 
-                                <li class="list-group-item">
+                                {% comment %} <li class="list-group-item">
                                   <span>امتیاز:</span>
                                   <span class="mb-0"
                                     >4.5<i
                                       class="fas fa-star text-warning ms-1"
                                     ></i
                                   ></span>
-                                </li>
+                                </li> {% endcomment %}
                               </ul>
                             </div>
                           </div>
                           <!-- Information END -->
                         </div>
+                      {% endfor %}
                         <!-- Card body END -->
                       </div>
                     </div>

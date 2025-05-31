@@ -45,6 +45,20 @@ class Course(models.Model):
         verbose_name = 'دوره'
         verbose_name_plural = 'دوره‌ها'
 
+
+class UserCourse(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='کاربر')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='دوره')
+    purchase_date = models.DateTimeField(default=timezone.now, verbose_name='تاریخ خرید')
+
+    class Meta:
+        unique_together = ('user', 'course')
+        verbose_name = 'دوره خریداری‌شده'
+        verbose_name_plural = 'دوره‌های خریداری‌شده'
+
+    def __str__(self):
+        return f"{self.user} -> {self.course.title}"
+
 class Season(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='seasons', verbose_name='دوره')
     title = models.CharField(max_length=200, verbose_name='عنوان')
