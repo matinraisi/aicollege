@@ -1,6 +1,5 @@
-from django.urls import path 
-from .views import  Student_bookmark,Student_Dashboard,Student_Course_Delete_Account,Student_Course_List,Student_Course_Resume,Student_Edit_Profile,Student_Quiz,Student_Subscription,Dashboard_Lesson,Lesson
-
+from django.urls import path
+from .views import Student_bookmark,Student_Dashboard,Student_Course_Delete_Account,Student_Course_List,Student_Course_Resume,Student_Edit_Profile,Student_Quiz,Student_Subscription,Dashboard_Lesson,Lesson
 
 app_name = 'dashboard'
 

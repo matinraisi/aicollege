@@ -80,55 +80,53 @@
             <!-- Course list START -->
             <div class="row g-4 justify-content-center">
             {% for course in courses %}
-                <!-- Card item START -->
-                <div class="col-lg-10 col-xxl-6">
-                    <div class="card rounded overflow-hidden shadow">
-                        <div class="row g-0">
-                            <!-- Image -->
-                            <div class="col-md-4">
-                            {% if course.poster %}
-                                <img src="{{ course.poster.url }}" alt="{{ course.title }}">
-                            {% else %}
-                                <img src="{% static 'assets/images/default-course.jpg' %}" alt="course image">
-                            {% endif %}
-                            </div>
-    
-                            <!-- Card body -->
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <!-- Title -->
-                                    <div class="d-flex justify-content-between mb-2">
-                                    {% if has_taken_level_test %}
-                                        <a href="{% url 'courses:course-detail' course.pk %}">{{ course.title }}</a>
-                                    {% else %}
-                                        <a href="{% url 'assessments:determine-level' %}">{{ course.title }}</a>
-                                    {% endif %}
-                                        <!-- Wishlist icon -->
-                                        {% comment %} <a href="#"><i class="fas fa-heart text-danger"></i></a> {% endcomment %}
-                                    </div>
-                                    <!-- Content -->
-                                    <!-- Info -->
-                                    <ul class="list-inline mb-1">
-                                        <li class="list-inline-item h6 fw-light mb-1 mb-sm-0"><i class="far fa-clock text-danger me-2"></i>{{ course.time_duration }}ساعت</li>
-                                        <li class="list-inline-item h6 fw-light mb-1 mb-sm-0"><i class="fas fa-table text-orange me-2"></i>{{ course.lesson_count }}ویدیو</li>
-                                        <li class="list-inline-item h6 fw-light"><i class="fas fa-signal text-success me-2"></i>{{ course.get_level_display }}</li>
-                                    </ul>
-                                    <!-- Rating -->
-                                    {% comment %} <ul class="list-inline mb-0">
-                                        <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                                        <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                                        <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                                        <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                                        <li class="list-inline-item me-0 small"><i class="fas fa-star-half-alt text-warning"></i></li>
-                                        <li class="list-inline-item ms-2 h6 fw-light">4.5/5.0</li>
-                                    </ul> {% endcomment %}
-                                </div>
-                            </div>
+            <div class="col-12 col-md-10 col-lg-8 mx-auto">
+                <div class="card rounded overflow-hidden shadow">
+                <div class="row g-0">
+                    <!-- Image -->
+                    <div class="col-md-4">
+                    {% if course.poster %}
+                        <img src="{{ course.poster.url }}" alt="{{ course.title }}" class="img-fluid h-100 w-100 object-fit-cover">
+                    {% else %}
+                        <img src="{% static 'assets/images/default-course.jpg' %}" alt="course image" class="img-fluid h-100 w-100 object-fit-cover">
+                    {% endif %}
+                    </div>
+
+                    <!-- Card body -->
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        <!-- Title -->
+                        <div class="d-flex justify-content-between mb-2">
+                        {% if has_taken_level_test %}
+                            <a href="{% url 'courses:course-detail' course.pk %}">{{ course.title }}</a>
+                        {% else %}
+                            <a href="{% url 'assessments:determine-level' %}">{{ course.title }}</a>
+                        {% endif %}
                         </div>
+
+                        <!-- Info -->
+                        <ul class="list-inline mb-1">
+                        <li class="list-inline-item h6 fw-light mb-1 mb-sm-0">
+                            <i class="far fa-clock text-danger me-2"></i>{{ course.time_duration }}ساعت
+                        </li>
+                        <li class="list-inline-item h6 fw-light mb-1 mb-sm-0">
+                            <i class="fas fa-table text-orange me-2"></i>{{ course.lesson_count }}ویدیو
+                        </li>
+                        <li class="list-inline-item h6 fw-light">
+                            <i class="fas fa-signal text-success me-2"></i>{{ course.get_level_display }}
+                        </li>
+                        </ul>
+                    </div>
                     </div>
                 </div>
-                <!-- Card item END -->
-                {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+
+            <!-- Course list END -->
+
+                
     
             <!-- Pagination START -->
             <div class="col-12">

@@ -2369,7 +2369,7 @@ Page content START -->
                         <!-- Price and time -->
                         <div>
                           <div class="d-flex align-items-center">
-                            <h3 class="fw-bold mb-0 fs-5 me-2">{{ course.price|intcomma }} تومان</h3>
+                            <h3 class="fw-bold mb-0 fs-5 me-2">{{ course.price|floatformat:1|intcomma }} تومان</h3>
                             
                           </div>
                           

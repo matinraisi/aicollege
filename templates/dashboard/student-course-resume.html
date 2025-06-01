@@ -216,14 +216,20 @@ Page content START -->
 				<!-- Course item START -->
 				<div class="card border">
 					<div class="card-header border-bottom">
+						
 						{% if courses %}
   						{% for item in courses %}
 						<!-- Card START -->
 						<div class="card">
 							<div class="row g-0">
-								<div class="col-md-3">
-									<img src="{{ item.course.image.url }}" class="rounded-2" alt="{{ item.course.title }}">
-								</div>
+							<div class="p-2" style="max-width: 225px;">
+                            {% if item.course.poster %}
+								<img src="{{ item.course.poster.url }}" alt="{{ item.course.title }}">
+							{% else %}
+								<img src="{% static 'assets/images/default-course.jpg' %}" alt="course image">
+							{% endif %}
+							
+                            </div>
 								<div class="col-md-9">
 									<div class="card-body">
 										<!-- Title -->
@@ -240,13 +246,15 @@ Page content START -->
 										<a href="{% url 'dashboard:dashboard-lesson' item.course.id %}" class="btn btn-primary-soft btn-sm mb-0">توضیحات دوره</a>
 									</div>
 								</div>
-							</div>
-						</div>
-						<!-- Card END -->
+								<!-- Card END -->
 						 {% endfor %}
 						{% else %}
 						<p>شما هنوز هیچ دوره‌ای ثبت‌نام نکرده‌اید.</p>
 						{% endif %}
+							</div>
+							
+						</div>
+						
 					</div>
 
 					

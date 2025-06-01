@@ -56,18 +56,22 @@ class Student_Edit_Profile(LoginRequiredMixin, View):
         messages.success(request, "پروفایل با موفقیت ویرایش شد.")
         return redirect('dashboard:student-edit-profile')  # به آدرس درست خودت هدایت کن
     
+
 class Dashboard_Lesson(View):
     template_name = 'dashboard/dashboard-lesson.html'
 
     def get(self, request, pk):
-        course = get_object_or_404(Course, pk=pk)
+        # فقط اگر کاربر دوره را خریده باشد، نمایش داده شود
+        user_course = get_object_or_404(UserCourse, user=request.user, course_id=pk)
+        course = user_course.course
         seasons = course.seasons.all()  # گرفتن فصل‌های مرتبط با این دوره
+
+        
         context = {
             'course': course,
             'seasons': seasons,
         }
         return render(request, self.template_name, context)
-
     
 class Student_Course_Delete_Account(View):
     template_name = 'dashboard/student-course-delete-account.html'

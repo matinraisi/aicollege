@@ -229,4 +229,18 @@ class GrammarAudio(models.Model):
     def __str__(self):
         return self.file.name 
 
+class UserProgress(models.Model):
+    user = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, verbose_name='کاربر')
+    season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name='درس')
+    is_completed = models.BooleanField(default=False, verbose_name='تکمیل شده')
+    last_viewed_at = models.DateTimeField(auto_now=True, verbose_name='آخرین بازدید')
+    progress_percentage = models.PositiveIntegerField(default=0, verbose_name='درصد پیشرفت')
+
+    class Meta:
+        verbose_name = 'پیشرفت کاربر'
+        verbose_name_plural = 'پیشرفت کاربران'
+        unique_together = ['user', 'season']
+
+    def __str__(self):
+        return f"{self.user.email} - {self.season.title} - {self.progress_percentage}%"
     
